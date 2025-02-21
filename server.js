@@ -1,9 +1,25 @@
-const express = require("express")
-const path = require("path")
+const express = require("express");
+const path = require("path");
 
-const app = express()
-const server = require("http").createServer(app)
+const app = express();
+const server = require("http").createServer(app);
 
-app.use(express.static(path.join(__dirname+"/public")))
+const io = require("socket.io")(server);
 
-server.listen(5000)
+app.use(express.static(path.join(__dirname + "/public")));
+
+io.on("connection", function (socket) {
+  socket.on("newuser", function (username) {
+    socket.broadcast.emit("update", username + "Joined the Chat");
+  });
+
+  socket.on("exituser", function (username) {
+    socket.broadcast.emit("update", username + "Left the Chat");
+  });
+
+  socket.on("chat", function (message) {
+    socket.broadcast.emit("chat", message);
+  });
+});
+
+server.listen(5000);
