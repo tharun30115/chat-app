@@ -121,6 +121,7 @@ body{
     padding: 10px;
 }
 
+
 .chat-screen .messages .message.my-message{
     justify-content: flex-end;   
 }
